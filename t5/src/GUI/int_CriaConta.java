@@ -4,6 +4,12 @@
  */
 package GUI;
 
+import Util.HibernateUtil;
+import entidades.Cliente;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import org.hibernate.Session;
+
 /**
  *
  * @author TheTolfo
@@ -15,8 +21,15 @@ public class int_CriaConta extends javax.swing.JFrame {
      */
     public int_CriaConta() {
         initComponents();
+        Set_Data();
         setTitle("InterVendas - Cadastro");
         setLocationRelativeTo(null);
+    }
+
+    private void Set_Data() {
+        SimpleDateFormat FormatoData = new SimpleDateFormat("dd/MM/yyyy");
+        GregorianCalendar Data = new GregorianCalendar();
+        jLabel4.setText(FormatoData.format(Data.getTime()));
     }
 
     /**
@@ -124,6 +137,11 @@ public class int_CriaConta extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jButton3.setText("Concluir");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jLabel11.setText("O login será utilizado como nick.");
@@ -178,12 +196,11 @@ public class int_CriaConta extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -227,7 +244,6 @@ public class int_CriaConta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
@@ -236,14 +252,58 @@ public class int_CriaConta extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        jPasswordField1.setText(null);
-        jPasswordField2.setText(null);
-        jTextField1.setText(null);
-        jTextField2.setText(null);
-        jTextField3.setText(null);
-        jTextField4.setText(null);
-        jTextField5.setText(null);
+        jPasswordField1.setText("");
+        jPasswordField2.setText("");
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        boolean valido = true;
+
+        /*
+         //verificar se login já existe.
+         if (Verifica_Login(jTextField1.getText())) {
+         jLabel1.setText("Login:  Já existe.");
+         }
+         //Verificar se nome já existe.
+         if (Verifica_Nome(jTextField2.getText());) {
+         jLabel5.setText("Nome Completo:  Já existe");
+         }
+         */
+        if (jLabel1.getText().equals("Login:  Já existe") || jLabel5.getText().equals("Nome Completo:  Já existe")) {
+            valido = false;
+        }
+        if (!jPasswordField1.getText().equals(jPasswordField2.getText())) {
+            jLabel8.setText("Repetir Senha:  Invalido");
+            valido = false;
+        }
+        if (jPasswordField1.getText().equals("") || jPasswordField2.getText().equals("") || jTextField1.getText().equals("") || jTextField2.getText().equals("")
+                || jTextField3.getText().equals("") || jTextField4.getText().equals("") || jTextField5.getText().equals("")) {
+            jLabel10.setText("Um ou mais campos Invalidos");
+            valido = false;
+        } else {
+            jLabel10.setText("");
+        }
+        if (valido) {
+            //Cria novo cliente e o adiciona ao banco de dados.
+            try {
+                Cliente a = new Cliente(jTextField1.getText(), jPasswordField1.getText(), jTextField3.getText(), jTextField2.getText(), jTextField4.getText(), jTextField5.getText(), 0, false, false);
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                s.beginTransaction();
+                s.save(a);
+                s.getTransaction().commit();
+                s.disconnect();
+                dispose();
+                Int_CriaConta_Aviso.main(null);
+            } catch (Exception a) {
+                Int_CriaConta_Erro.main(null);
+            }
+        }
+    }//GEN-LAST:event_jButton3MouseClicked
 
     /**
      * @param args the command line arguments

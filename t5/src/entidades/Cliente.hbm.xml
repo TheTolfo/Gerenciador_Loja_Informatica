@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/01/2013 11:54:28 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="entidades.Cliente" table="cliente" catalog="t5_final">
+        <id name="idCliente" type="java.lang.Integer">
+            <column name="idCliente" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="pedido" class="entidades.Pedido" fetch="select">
+            <column name="Pedido_idPedido" not-null="true" />
+        </many-to-one>
+        <property name="login" type="string">
+            <column name="Login" length="45" />
+        </property>
+        <property name="senha" type="string">
+            <column name="Senha" length="45" />
+        </property>
+        <property name="frase" type="string">
+            <column name="Frase" length="45" />
+        </property>
+        <property name="nome" type="string">
+            <column name="Nome" length="70" />
+        </property>
+        <property name="endereco" type="string">
+            <column name="Endereco" length="200" />
+        </property>
+        <property name="cep" type="string">
+            <column name="CEP" length="45" />
+        </property>
+        <property name="reputacao" type="java.lang.Integer">
+            <column name="Reputacao" />
+        </property>
+        <property name="adm" type="java.lang.Boolean">
+            <column name="ADM" />
+        </property>
+        <property name="admPrinc" type="java.lang.Boolean">
+            <column name="ADM_princ" />
+        </property>
+    </class>
+</hibernate-mapping>

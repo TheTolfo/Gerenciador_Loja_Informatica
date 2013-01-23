@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/01/2013 11:54:28 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="entidades.Itens" table="itens" catalog="t5_final">
+        <id name="idItens" type="java.lang.Integer">
+            <column name="idItens" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="produto" class="entidades.Produto" fetch="select">
+            <column name="Produto_idProduto" not-null="true" />
+        </many-to-one>
+        <property name="quantia" type="java.lang.Integer">
+            <column name="Quantia" />
+        </property>
+        <property name="preco" type="java.lang.Double">
+            <column name="Preco" precision="22" scale="0" />
+        </property>
+        <property name="desconto" type="java.lang.Integer">
+            <column name="Desconto" />
+        </property>
+        <set name="pedidos" inverse="true">
+            <key>
+                <column name="Itens_idItens" not-null="true" />
+            </key>
+            <one-to-many class="entidades.Pedido" />
+        </set>
+    </class>
+</hibernate-mapping>

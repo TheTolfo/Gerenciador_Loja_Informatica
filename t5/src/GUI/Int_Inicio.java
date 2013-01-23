@@ -4,8 +4,6 @@
  */
 package GUI;
 
-import javax.swing.ImageIcon;
-
 /**
  *
  * @author TheTolfo

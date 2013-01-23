@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/01/2013 11:54:28 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="entidades.Produto" table="produto" catalog="t5_final">
+        <id name="idProduto" type="java.lang.Integer">
+            <column name="idProduto" />
+            <generator class="identity" />
+        </id>
+        <property name="nome" type="string">
+            <column name="Nome" length="45" />
+        </property>
+        <property name="descricao" type="string">
+            <column name="Descricao" />
+        </property>
+        <property name="quantia" type="java.lang.Integer">
+            <column name="Quantia" />
+        </property>
+        <property name="preco" type="java.lang.Double">
+            <column name="Preco" precision="22" scale="0" />
+        </property>
+        <property name="desconto" type="java.lang.Integer">
+            <column name="Desconto" />
+        </property>
+        <set name="itenses" inverse="true">
+            <key>
+                <column name="Produto_idProduto" not-null="true" />
+            </key>
+            <one-to-many class="entidades.Itens" />
+        </set>
+    </class>
+</hibernate-mapping>
