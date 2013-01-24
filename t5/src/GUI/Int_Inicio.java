@@ -50,6 +50,7 @@ public class Int_Inicio extends javax.swing.JFrame {
             }
         });
 
+        jTextPane3.setEditable(false);
         jTextPane3.setBackground(new java.awt.Color(240, 240, 240));
         jTextPane3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 36)); // NOI18N
         jTextPane3.setText("      Bem vindo \n             ao \n     InterVendas!");

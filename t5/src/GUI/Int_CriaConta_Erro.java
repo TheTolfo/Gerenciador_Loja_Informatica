@@ -15,6 +15,8 @@ public class Int_CriaConta_Erro extends javax.swing.JFrame {
      */
     public Int_CriaConta_Erro() {
         initComponents();
+        setTitle("InterVendas - Cadastro mal sucedido");
+        setLocationRelativeTo(null);
     }
 
     /**

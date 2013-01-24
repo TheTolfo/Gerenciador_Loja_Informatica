@@ -6,8 +6,11 @@ package GUI;
 
 import Util.HibernateUtil;
 import entidades.Cliente;
+import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import javax.swing.JOptionPane;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 /**
@@ -157,10 +160,14 @@ public class int_CriaConta extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel3)
-                                .addGap(9, 9, 9)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLabel3)
+                                        .addGap(9, 9, 9))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,11 +203,15 @@ public class int_CriaConta extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -263,22 +274,28 @@ public class int_CriaConta extends javax.swing.JFrame {
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         boolean valido = true;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
 
-        /*
-         //verificar se login já existe.
-         if (Verifica_Login(jTextField1.getText())) {
-         jLabel1.setText("Login:  Já existe.");
-         }
-         //Verificar se nome já existe.
-         if (Verifica_Nome(jTextField2.getText());) {
-         jLabel5.setText("Nome Completo:  Já existe");
-         }
-         */
-        if (jLabel1.getText().equals("Login:  Já existe") || jLabel5.getText().equals("Nome Completo:  Já existe")) {
+        //verificar se login já existe.
+        if (t5.Verificações.Verifica_Login(jTextField1.getText()) && !jTextField1.getText().equals("")) {
+            jLabel1.setText("Login:  Já existe.");
+        } else {
+            jLabel1.setText("Login:");
+        }
+
+        //Verificar se nome já existe.
+        if (t5.Verificações.Verifica_Nome(jTextField2.getText()) && !jTextField2.getText().equals("")) {
+            jLabel5.setText("Nome Completo:  Já existe");
+        } else {
+            jLabel5.setText("Nome Completo:");
+        }
+
+        if (jLabel1.getText().equals("Login:  Já existe") || jLabel2.getText().equals("Nome Completo:  Já existe")) {
             valido = false;
         }
         if (!jPasswordField1.getText().equals(jPasswordField2.getText())) {
-            jLabel8.setText("Repetir Senha:  Invalido");
+            jLabel8.setText("Repetir Senha:  Senhas não conferem!");
             valido = false;
         }
         if (jPasswordField1.getText().equals("") || jPasswordField2.getText().equals("") || jTextField1.getText().equals("") || jTextField2.getText().equals("")
@@ -289,20 +306,25 @@ public class int_CriaConta extends javax.swing.JFrame {
             jLabel10.setText("");
         }
         if (valido) {
-            //Cria novo cliente e o adiciona ao banco de dados.
             try {
-                Cliente a = new Cliente(jTextField1.getText(), jPasswordField1.getText(), jTextField3.getText(), jTextField2.getText(), jTextField4.getText(), jTextField5.getText(), 0, false, false);
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
                 s.beginTransaction();
+                Cliente a = new Cliente(jTextField1.getText(), jPasswordField1.getText(), jTextField3.getText(), jTextField2.getText(), jTextField4.getText(), jTextField5.getText(), 0, false, false);
                 s.save(a);
                 s.getTransaction().commit();
-                s.disconnect();
                 dispose();
-                Int_CriaConta_Aviso.main(null);
-            } catch (Exception a) {
-                Int_CriaConta_Erro.main(null);
+                JOptionPane.showMessageDialog(null, "Conta Criada com sucesso!");
+                //Int_CriaConta_Aviso.main(null);
+                Int_Inicio.main(null);
+            } catch (HibernateException | HeadlessException a) {
+                s.getTransaction().commit();
+                dispose();
+                JOptionPane.showMessageDialog(null, "Erro ao criar conta!");
+                //Int_CriaConta_Erro.main(null);
+                Int_Inicio.main(null);
             }
         }
+        s.getTransaction().commit();
+        repaint();
     }//GEN-LAST:event_jButton3MouseClicked
 
     /**

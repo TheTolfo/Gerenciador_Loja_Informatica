@@ -1,5 +1,5 @@
 package entidades;
-// Generated 23/01/2013 11:54:28 by Hibernate Tools 3.2.1.GA
+// Generated 24/01/2013 10:27:01 by Hibernate Tools 3.2.1.GA
 
 
 
@@ -10,7 +10,6 @@ public class Cliente  implements java.io.Serializable {
 
 
      private Integer idCliente;
-     private Pedido pedido;
      private String login;
      private String senha;
      private String frase;
@@ -24,12 +23,7 @@ public class Cliente  implements java.io.Serializable {
     public Cliente() {
     }
 
-	
-    public Cliente(Pedido pedido) {
-        this.pedido = pedido;
-    }
     public Cliente(String login, String senha, String frase, String nome, String endereco, String cep, Integer reputacao, Boolean adm, Boolean admPrinc) {
-       //this.pedido = pedido;
        this.login = login;
        this.senha = senha;
        this.frase = frase;
@@ -47,13 +41,6 @@ public class Cliente  implements java.io.Serializable {
     
     public void setIdCliente(Integer idCliente) {
         this.idCliente = idCliente;
-    }
-    public Pedido getPedido() {
-        return this.pedido;
-    }
-    
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
     }
     public String getLogin() {
         return this.login;

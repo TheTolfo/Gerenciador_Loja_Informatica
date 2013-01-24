@@ -93,6 +93,8 @@ public class Int_RecuperaSenha extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jLabel4.setText("dd/MM/yyyy");
 
+        jLabel5.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
+
         jLabel6.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jLabel6.setText("Senha");
 
@@ -175,7 +177,7 @@ public class Int_RecuperaSenha extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        Cliente verifica = null;
+        Cliente verifica = t5.Verificações.Retorna_Login(jTextField1.getText());
         //verifica = Verifica_cliente(jTextField1.getText());
         if(verifica == null){
             jLabel5.setText("Frase ou login invalidos");

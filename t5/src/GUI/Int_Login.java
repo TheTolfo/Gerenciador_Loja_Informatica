@@ -4,18 +4,18 @@
  */
 package GUI;
 
+import Util.HibernateUtil;
 import entidades.Cliente;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import javax.swing.JOptionPane;
+import org.hibernate.Session;
 
 /**
  *
  * @author TheTolfo
  */
 public class Int_Login extends javax.swing.JFrame {
-
-    boolean adm = true;
-    boolean adm_princ = false;
 
     /**
      * Creates new form Int_Login
@@ -65,6 +65,7 @@ public class Int_Login extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jLabel2.setText("Senha:");
 
+        jTextField1.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -168,27 +169,36 @@ public class Int_Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        Cliente verifica = null;
+        Cliente verifica = t5.Verificações.Retorna_Login(jTextField1.getText());
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
         //verifica = Verifica_cliente(jTextField1.getText());
         if (verifica == null) {
             jLabel5.setText("Login ou senha invalidos!");
         } else {
-            if (!verifica.getSenha().equals(jPasswordField1.getText())) {
-                jLabel5.setText("Login ou senha invalidos!");
-            } else {
-                if (adm) {
-                    if (adm_princ) {
-                        //Int_AdmPrinc().main(null);
-                    } else {
-                        //Int_Adm().main(null);
-                    }
+            try {
+                if (!jPasswordField1.getText().equals(verifica.getSenha())) {
+                    jLabel5.setText("Login ou senha invalidos!");
                 } else {
-                    //Int_UsuarioLogado().main(null);
+                    //JOptionPane.showMessageDialog(null, "LOGOU");
+                    jLabel5.setText("");
+                    if (verifica.getAdm() == true) {
+                        JOptionPane.showMessageDialog(null, "Logando como Adiministrador!");
+                        dispose();
+                        //Int_Adm.main(null);
+                        Int_Adm.Main_2nd(verifica);
+                    } else {
+                            JOptionPane.showMessageDialog(null, "Conta Autenticada com sucesso!");
+                            //Int_UsuarioLogado.Main_2nd(null);
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Erro: " + e);
             }
         }
     }//GEN-LAST:event_jButton1MouseClicked
 
+    
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         dispose();
         Int_Inicio.main(null);
@@ -208,16 +218,22 @@ public class Int_Login extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Int_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Int_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Int_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Int_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

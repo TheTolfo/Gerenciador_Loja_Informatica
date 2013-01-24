@@ -15,6 +15,8 @@ public class Int_CriaConta_Aviso extends javax.swing.JFrame {
      */
     public Int_CriaConta_Aviso() {
         initComponents();
+        setTitle("InterVendas - Cadastro Criado");
+        setLocationRelativeTo(null);
     }
 
     /**
