@@ -4,43 +4,87 @@
  */
 package GUI;
 
+import Util.HibernateUtil;
 import entidades.Cliente;
+import entidades.Produto;
+import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 
 /**
  *
  * @author TheTolfo
  */
-public class Int_Adm extends javax.swing.JFrame {
+public class Int_Adm_Prod extends javax.swing.JFrame {
+
     Cliente clt;
+
     /**
-     * Creates new form Int_Adm
+     * Creates new form Int_Adm_Prod
      */
-    public Int_Adm(Cliente Logado) {
+    public Int_Adm_Prod(Cliente Logado) {
         initComponents();
         Set_Cliente(Logado);
         Set_Data();
         setTitle("InterVendas - ADM Editar Produtos");
         setLocationRelativeTo(null);
         Set_Boas_Vindas(clt.getNome());
+        Preenche_Tabela();
         setVisible(true);
     }
-    
-    private void Set_Cliente(Cliente Logado){
+
+    private void Set_Cliente(Cliente Logado) {
         clt = Logado;
     }
-    
+
     private void Set_Data() {
         SimpleDateFormat FormatoData = new SimpleDateFormat("dd/MM/yyyy");
         GregorianCalendar Data = new GregorianCalendar();
         jLabel2.setText(FormatoData.format(Data.getTime()));
     }
 
-    private void Set_Boas_Vindas(String str){
+    private void Preenche_Tabela() {
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(4);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(4);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(4);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(4);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(4);
+        jTable1.getColumnModel().getColumn(5).setPreferredWidth(4);
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setNumRows(0);
+
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession(); //retorna uma sessao para referencia
+            s.beginTransaction(); // abre a sessao para incluir, recuperar deletar os objetos na base de dados
+
+            List<Produto> c = new ArrayList<Produto>();
+            c = s.createQuery("from Produto").list();
+            s.getTransaction().commit(); //fexa seçao e encerra transaçõe
+
+            for (Produto cl : c) {
+                modelo.addRow(new Object[]{cl.getNome(), cl.getDescricao(), cl.getIdProduto(), cl.getPreco(), cl.getQuantia(), cl.getDesconto()});
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e);
+        }
+    }
+
+    private Produto RetornaProd_Selecionado() {
+        int linha = jTable1.getSelectedRow();
+        return t5.Verificações.Retorna_Produto(jTable1.getValueAt(linha, 0).toString());
+    }
+
+    private void Set_Boas_Vindas(String str) {
         jLabel3.setText("Bem vindo " + str + "!");
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,9 +100,12 @@ public class Int_Adm extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -69,17 +116,61 @@ public class Int_Adm extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jLabel2.setText("dd/MM/yyyy");
 
-        jLabel3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 14)); // NOI18N
         jLabel3.setText("Bem vindo!");
 
         jButton1.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jButton1.setText("Adicionar");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
         jButton2.setText("Remover");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
-        jButton3.setText("Alterar");
+        jButton3.setText("Editar");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+
+        jTable1.setFont(new java.awt.Font("Lucida Calligraphy", 0, 11)); // NOI18N
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Nome", "Descrição", "id Produto", "Preço", "Quantiadade", "Desconto"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
 
         jMenuBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -104,6 +195,16 @@ public class Int_Adm extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu2);
 
+        jMenu4.setText("Opcoes");
+        jMenu4.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
+        jMenu4.setMargin(new java.awt.Insets(0, 5, 0, 5));
+        jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu4MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu4);
+
         jMenu3.setText("Logout");
         jMenu3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
         jMenu3.setMargin(new java.awt.Insets(0, 5, 0, 0));
@@ -124,6 +225,9 @@ public class Int_Adm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel1)
@@ -131,11 +235,12 @@ public class Int_Adm extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(20, 20, 20))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 3, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -146,7 +251,9 @@ public class Int_Adm extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
@@ -163,16 +270,61 @@ public class Int_Adm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        if(clt.getAdmPrinc()){
-            //Int_Adm_princ.Main_2nd(clt);
-        }else{
+        if (clt.getAdmPrinc()) {
+            dispose();
+            Int_Adm_Adm.Main_2nd(clt);
+        } else {
             JOptionPane.showMessageDialog(null, "Voce não tem permissao para isso!");
         }
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-        //Int_ADM_EditaClientes.Main_2nd(clt);
+        dispose();
+        Int_Adm_Client.Main_2nd(clt);
     }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        try {
+            Produto prod = RetornaProd_Selecionado();
+            if (prod != null) {
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                s.beginTransaction();
+                s.delete(prod);
+                s.getTransaction().commit();
+                JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado!");
+            }
+        } catch (HibernateException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e);
+        }
+        jTable1.removeAll();
+        Preenche_Tabela();
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        try {
+            Produto prod = RetornaProd_Selecionado();
+            if (prod != null) {
+                dispose();
+                Int_AddProd.Main_2nd(false, clt, prod);
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhum produto selecionado!");
+            }
+        } catch (Exception prod) {
+            JOptionPane.showMessageDialog(null, "Erro: " + prod);
+        }
+    }//GEN-LAST:event_jButton3MouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        dispose();
+        Int_AddProd.Main_2nd(true, clt, null);
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
+        dispose();
+        Int_Adm_Opcoes.Main_2nd(clt);
+    }//GEN-LAST:event_jMenu4MouseClicked
 
     public static void Main_2nd(final Cliente Logado) {
         /* Set the Nimbus look and feel */
@@ -188,20 +340,20 @@ public class Int_Adm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Adm_Prod.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Adm_Prod.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Adm_Prod.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Adm_Prod.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_Adm(Logado).setVisible(true);
+                new Int_Adm_Prod(Logado).setVisible(true);
             }
         });
     }
@@ -223,6 +375,9 @@ public class Int_Adm extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

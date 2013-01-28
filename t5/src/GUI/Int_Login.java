@@ -172,7 +172,6 @@ public class Int_Login extends javax.swing.JFrame {
         Cliente verifica = t5.Verificações.Retorna_Login(jTextField1.getText());
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
-        //verifica = Verifica_cliente(jTextField1.getText());
         if (verifica == null) {
             jLabel5.setText("Login ou senha invalidos!");
         } else {
@@ -186,7 +185,7 @@ public class Int_Login extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Logando como Adiministrador!");
                         dispose();
                         //Int_Adm.main(null);
-                        Int_Adm.Main_2nd(verifica);
+                        Int_Adm_Prod.Main_2nd(verifica);
                     } else {
                             JOptionPane.showMessageDialog(null, "Conta Autenticada com sucesso!");
                             //Int_UsuarioLogado.Main_2nd(null);
