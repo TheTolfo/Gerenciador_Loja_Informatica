@@ -8,10 +8,12 @@ import Util.HibernateUtil;
 import entidades.Cliente;
 import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import t5.Carrinho_Compras;
 
 /**
  *
@@ -21,14 +23,15 @@ public class Int_EditaFrase extends javax.swing.JFrame {
 
     private boolean Adm;
     private Cliente clt;
+    ArrayList<Carrinho_Compras> cc;
 
     /**
      * Creates new form Int_EditaFrase
      */
-    public Int_EditaFrase(boolean adm, Cliente Logado) {
+    public Int_EditaFrase(boolean adm, Cliente Logado, ArrayList<Carrinho_Compras> cp) {
         initComponents();
         setLocationRelativeTo(null);
-        Set_Dados(adm, Logado);
+        Set_Dados(adm, Logado, cp);
         if (adm) {
             setTitle("InterVendas - ADM Alterar frase");
         } else {
@@ -45,9 +48,12 @@ public class Int_EditaFrase extends javax.swing.JFrame {
         jLabel3.setText(FormatoData.format(Data.getTime()));
     }
 
-    private void Set_Dados(boolean adm, Cliente Logado) {
+    private void Set_Dados(boolean adm, Cliente Logado, ArrayList<Carrinho_Compras> cp) {
         Adm = adm;
         clt = Logado;
+        if (!adm) {
+            cc = cp;
+        }
     }
 
     private void Set_Campos() {
@@ -207,7 +213,8 @@ public class Int_EditaFrase extends javax.swing.JFrame {
         if (Adm) {
             Int_Adm_Opcoes.Main_2nd(clt);
         } else {
-            //Int_Cliente_Opcoes.Main_2nd(clt);
+            dispose();
+            Int_Cliente_Opcoes.Main_2nd(clt, cc);
         }
     }//GEN-LAST:event_jButton2MouseClicked
 
@@ -224,7 +231,8 @@ public class Int_EditaFrase extends javax.swing.JFrame {
                 if (Adm) {
                     Int_Adm_Opcoes.Main_2nd(clt);
                 } else {
-                    //Int_Cliente_Opcoes.Main_2nd(clt);
+                    dispose();
+                    Int_Cliente_Opcoes.Main_2nd(clt, cc);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Senha invalida!");
@@ -234,7 +242,7 @@ public class Int_EditaFrase extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1MouseClicked
 
-    public static void Main_2nd(final boolean adm, final Cliente Logado) {
+    public static void Main_2nd(final boolean adm, final Cliente Logado, final ArrayList<Carrinho_Compras> cp) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -261,7 +269,7 @@ public class Int_EditaFrase extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_EditaFrase(adm, Logado).setVisible(true);
+                new Int_EditaFrase(adm, Logado, cp).setVisible(true);
             }
         });
     }
@@ -296,7 +304,7 @@ public class Int_EditaFrase extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_EditaFrase(true, new Cliente("test", "test", "test", "test", "test", "test", 0, true, true)).setVisible(true);
+                new Int_EditaFrase(true, new Cliente("test", "test", "test", "test", "test", "test", 0, true, true), null).setVisible(true);
             }
         });
     }

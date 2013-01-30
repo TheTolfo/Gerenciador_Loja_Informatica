@@ -3,35 +3,36 @@
  * and open the template in the editor.
  */
 package GUI;
-    
+
 import entidades.Cliente;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import javax.swing.JOptionPane;
 import t5.Carrinho_Compras;
 
 /**
  *
  * @author TheTolfo
  */
-public class Int_Adm_Opcoes extends javax.swing.JFrame {
-    
+public class Int_Cliente_Opcoes extends javax.swing.JFrame {
+
     Cliente clt;
-    
+    ArrayList<Carrinho_Compras> cc;
+
     /**
-     * Creates new form Int_Adm_Opcoes
+     * Creates new form Int_Cliente_Opcoes
      */
-    public Int_Adm_Opcoes(Cliente Logado) {
+    public Int_Cliente_Opcoes(Cliente Logado, ArrayList<Carrinho_Compras> cp) {
         initComponents();
-        setTitle("InterVendas - ADM Opcoes");
+        Set_Dados(Logado, cp);
         setLocationRelativeTo(null);
-        Set_Cliente(Logado);
+        setTitle("InterVendas - Cliente Opcoes");
         Set_Boas_Vindas(clt.getNome());
         Set_Data();
     }
-    
-    private void Set_Cliente(Cliente Logado) {
+
+    private void Set_Dados(Cliente Logado, ArrayList<Carrinho_Compras> cp) {
+        cc = cp;
         clt = Logado;
     }
 
@@ -40,7 +41,7 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
         GregorianCalendar Data = new GregorianCalendar();
         jLabel2.setText(FormatoData.format(Data.getTime()));
     }
-
+    
     private void Set_Boas_Vindas(String str) {
         jLabel3.setText("Bem vindo " + str + "!");
     }
@@ -61,9 +62,8 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu2 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -101,21 +101,9 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
             }
         });
 
-        jMenu2.setText("Editar Clientes");
-        jMenu2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jMenu2.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
-        jMenu2.setMargin(new java.awt.Insets(0, 0, 0, 5));
-        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu2MouseClicked(evt);
-            }
-        });
-        jMenuBar1.add(jMenu2);
-
-        jMenu1.setText("Editar Produtos");
-        jMenu1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jMenu1.setText("Lista de Produtos");
         jMenu1.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
-        jMenu1.setMargin(new java.awt.Insets(0, 5, 0, 5));
+        jMenu1.setMargin(new java.awt.Insets(0, 0, 0, 5));
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu1MouseClicked(evt);
@@ -123,15 +111,15 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu1);
 
-        jMenu3.setText("Editar ADM's");
-        jMenu3.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
-        jMenu3.setMargin(new java.awt.Insets(0, 5, 0, 5));
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+        jMenu2.setText("Carrinho de Compras");
+        jMenu2.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
+        jMenu2.setMargin(new java.awt.Insets(0, 5, 0, 5));
+        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
+                jMenu2MouseClicked(evt);
             }
         });
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Logout");
         jMenu4.setFont(new java.awt.Font("Lucida Calligraphy", 0, 12)); // NOI18N
@@ -150,17 +138,21 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2))
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -175,32 +167,13 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        dispose();
-        Int_Adm_Client.Main_2nd(clt);
-    }//GEN-LAST:event_jMenu2MouseClicked
-
-    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-        dispose();
-        Int_Adm_Prod.Main_2nd(clt);
-    }//GEN-LAST:event_jMenu1MouseClicked
-
-    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-        if (clt.getAdmPrinc()) {
-            dispose();
-            Int_Adm_Adm.Main_2nd(clt);
-        } else {
-            JOptionPane.showMessageDialog(null, "Voce não tem permissao para isso!");
-        }
-    }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
         dispose();
@@ -209,21 +182,30 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         dispose();
-        Int_EditaSenha.Main_2nd(true, clt, null);
+        Int_EditaSenha.Main_2nd(false, clt, cc);
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         dispose();
-        Int_EditaFrase.Main_2nd(true, clt, null);
+        Int_EditaFrase.Main_2nd(false, clt, cc);
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         dispose();
-        Int_EditaEndereco.Main_2nd(true, clt, null);
+        Int_EditaEndereco.Main_2nd(false, clt, cc);
     }//GEN-LAST:event_jButton3MouseClicked
 
-    
-    public static void Main_2nd(final Cliente Logado) {
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        dispose();
+        Int_Cliente_ListaProdutos.Main_2nd(clt, cc);
+    }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
+        dispose();
+        Int_Cliente_CarrinhoCompras.Main_2nd(clt, cc);
+    }//GEN-LAST:event_jMenu2MouseClicked
+
+    public static void Main_2nd(final Cliente Logado, final ArrayList<Carrinho_Compras> cp) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -237,24 +219,24 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_Adm_Opcoes(Logado).setVisible(true);
+                new Int_Cliente_Opcoes(Logado, cp).setVisible(true);
             }
         });
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -272,20 +254,20 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Int_Adm_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Int_Cliente_Opcoes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_Adm_Opcoes(new Cliente ("test", "test", "test", "test", "test", "test", 0, true, true)).setVisible(true);
+                new Int_Cliente_Opcoes(new Cliente ("test", "test", "test", "test", "test", "test", 0, true, true), null).setVisible(true);
             }
         });
     }
@@ -298,7 +280,6 @@ public class Int_Adm_Opcoes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     // End of variables declaration//GEN-END:variables

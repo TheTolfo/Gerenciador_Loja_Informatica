@@ -7,9 +7,11 @@ package GUI;
 import Util.HibernateUtil;
 import entidades.Cliente;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
+import t5.Carrinho_Compras;
 
 /**
  *
@@ -179,16 +181,15 @@ public class Int_Login extends javax.swing.JFrame {
                 if (!jPasswordField1.getText().equals(verifica.getSenha())) {
                     jLabel5.setText("Login ou senha invalidos!");
                 } else {
-                    //JOptionPane.showMessageDialog(null, "LOGOU");
                     jLabel5.setText("");
                     if (verifica.getAdm() == true) {
                         JOptionPane.showMessageDialog(null, "Logando como Adiministrador!");
                         dispose();
-                        //Int_Adm.main(null);
                         Int_Adm_Prod.Main_2nd(verifica);
                     } else {
                             JOptionPane.showMessageDialog(null, "Conta Autenticada com sucesso!");
-                            //Int_UsuarioLogado.Main_2nd(null);
+                            ArrayList<Carrinho_Compras> novo = new ArrayList<>();
+                            Int_Cliente_ListaProdutos.Main_2nd(verifica, novo);
                     }
                 }
             } catch (Exception e) {

@@ -33,4 +33,20 @@ public class Carrinho_Compras {
     private void Set_ValorTotal(){
         this.Valor_Total = Quantidade * Prod.getPreco();
     }
+    
+    public void SetQuantia(int q){
+        this.Quantidade = q;
+        Set_ValorTotal();
+    }
+   
+    public int Get_Quantia(){
+        return Quantidade;
+    }
+    public Produto Get_Produto(){
+        return Prod;
+    }
+    
+    public double Get_ValorTotal(){
+        return Valor_Total;
+    }
 }

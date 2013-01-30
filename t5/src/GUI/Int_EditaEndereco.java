@@ -8,10 +8,12 @@ import Util.HibernateUtil;
 import entidades.Cliente;
 import java.awt.HeadlessException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import t5.Carrinho_Compras;
 
 /**
  *
@@ -21,14 +23,15 @@ public class Int_EditaEndereco extends javax.swing.JFrame {
 
     private boolean Adm;
     private Cliente clt;
+    ArrayList<Carrinho_Compras> cc;
 
     /**
      * Creates new form Int_EditaEndereco
      */
-    public Int_EditaEndereco(boolean adm, Cliente Logado) {
+    public Int_EditaEndereco(boolean adm, Cliente Logado, ArrayList<Carrinho_Compras> cp) {
         initComponents();
         setLocationRelativeTo(null);
-        Set_Dados(adm, Logado);
+        Set_Dados(adm, Logado, cp);
         if (adm) {
             setTitle("InterVendas - ADM Alterar endereco");
         } else {
@@ -45,9 +48,12 @@ public class Int_EditaEndereco extends javax.swing.JFrame {
         jLabel3.setText(FormatoData.format(Data.getTime()));
     }
 
-    private void Set_Dados(boolean adm, Cliente Logado) {
+    private void Set_Dados(boolean adm, Cliente Logado, ArrayList<Carrinho_Compras> cp) {
         Adm = adm;
         clt = Logado;
+        if (!adm) {
+            cc = cp;
+        }
     }
 
     private void Set_Campos() {
@@ -232,7 +238,8 @@ public class Int_EditaEndereco extends javax.swing.JFrame {
         if (Adm) {
             Int_Adm_Opcoes.Main_2nd(clt);
         } else {
-            //Int_Cliente_Opcoes.Main_2nd(clt);
+            dispose();
+            Int_Cliente_Opcoes.Main_2nd(clt, cc);
         }
     }//GEN-LAST:event_jButton2MouseClicked
 
@@ -241,42 +248,37 @@ public class Int_EditaEndereco extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        try{
-        if (jPasswordField1.getText().equals(clt.getSenha())) {
-            clt.setEndereco(jTextField1.getText());
-            clt.setCep(jTextField2.getText());
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession(); //retorna uma sessao para referencia
-            s.beginTransaction(); // abre a sessao para incluir, recuperar deletar os objetos na base de dados
-            s.update(clt);
-            s.beginTransaction().commit();
-            JOptionPane.showMessageDialog(null, "Endereço alterada com sucesso!");
+        try {
+            if (jPasswordField1.getText().equals(clt.getSenha())) {
+                clt.setEndereco(jTextField1.getText());
+                clt.setCep(jTextField2.getText());
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession(); //retorna uma sessao para referencia
+                s.beginTransaction(); // abre a sessao para incluir, recuperar deletar os objetos na base de dados
+                s.update(clt);
+                s.beginTransaction().commit();
+                JOptionPane.showMessageDialog(null, "Endereço alterada com sucesso!");
+                dispose();
+                if (Adm) {
+                    Int_Adm_Opcoes.Main_2nd(clt);
+                } else {
+                    dispose();
+                    Int_Cliente_Opcoes.Main_2nd(clt, cc);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Senha invalida!");
+            }
             dispose();
             if (Adm) {
                 Int_Adm_Opcoes.Main_2nd(clt);
             } else {
-                //Int_Cliente_Opcoes.Main_2nd(clt);
+                Int_Cliente_Opcoes.Main_2nd(clt, cc);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Senha invalida!");
-        }
-        dispose();
-        if (Adm) {
-            Int_Adm_Opcoes.Main_2nd(clt);
-        } else {
-            //Int_Cliente_Opcoes.Main_2nd(clt);
-        }
-        }
-        catch(HibernateException | HeadlessException e){
+        } catch (HibernateException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro: " + e);
         }
     }//GEN-LAST:event_jButton1MouseClicked
 
-    
-    
-    
-    
-
-    public static void Main_2nd(final boolean adm, final Cliente Logado) {
+    public static void Main_2nd(final boolean adm, final Cliente Logado, final ArrayList<Carrinho_Compras> cp) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -303,7 +305,7 @@ public class Int_EditaEndereco extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_EditaEndereco(adm, Logado).setVisible(true);
+                new Int_EditaEndereco(adm, Logado, cp).setVisible(true);
             }
         });
     }
@@ -338,7 +340,7 @@ public class Int_EditaEndereco extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_EditaEndereco(true, new Cliente("test", "test", "test", "test", "test", "test", 0, true, true)).setVisible(true);
+                new Int_EditaEndereco(true, new Cliente("test", "test", "test", "test", "test", "test", 0, true, true), null).setVisible(true);
             }
         });
     }
