@@ -282,11 +282,15 @@ public class Int_Adm_Client extends javax.swing.JFrame {
         try {
             Cliente c = RetornaClient_Selecionado();
             if (c != null) {
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(c);
-                s.getTransaction().commit();
-                JOptionPane.showMessageDialog(null, "Cliente removido com sucesso!");
+                if (JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente " + c.getNome() + "?", "Exclusão", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(c);
+                    s.getTransaction().commit();
+                    JOptionPane.showMessageDialog(null, "Cliente " + c.getNome() + " removido com sucesso!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cliente " + c.getNome() + " não removido!");
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Cliente não encontrado!");
             }
@@ -326,9 +330,7 @@ public class Int_Adm_Client extends javax.swing.JFrame {
         Int_Adm_Opcoes.Main_2nd(clt);
     }//GEN-LAST:event_jMenu5MouseClicked
 
-    
-    
-        public static void Main_2nd(final Cliente Logado){
+    public static void Main_2nd(final Cliente Logado) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -365,9 +367,7 @@ public class Int_Adm_Client extends javax.swing.JFrame {
             }
         });
     }
-        
-        
-        
+
     /**
      * @param args the command line arguments
      */

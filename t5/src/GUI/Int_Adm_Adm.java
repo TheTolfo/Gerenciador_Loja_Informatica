@@ -21,6 +21,7 @@ import org.hibernate.Session;
  * @author TheTolfo
  */
 public class Int_Adm_Adm extends javax.swing.JFrame {
+
     Cliente clt;
 
     /**
@@ -28,7 +29,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
      */
     public Int_Adm_Adm(Cliente Logado) {
         initComponents();
-        
+
         setTitle("InterVendas - ADM Editar Adm's");
         setLocationRelativeTo(null);
         Preenche_Tabela();
@@ -36,7 +37,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
         Set_Boas_Vindas(clt.getNome());
         Set_Data();
     }
-    
+
     private void Set_Cliente(Cliente Logado) {
         clt = Logado;
     }
@@ -55,7 +56,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
         int linha = jTable1.getSelectedRow();
         return t5.Verificações.Retorna_Login(jTable1.getValueAt(linha, 1).toString());
     }
-    
+
     private void Preenche_Tabela() {
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(4);
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(4);
@@ -278,11 +279,15 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
         try {
             Cliente c = RetornaClient_Selecionado();
             if (c != null) {
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(c);
-                s.getTransaction().commit();
-                JOptionPane.showMessageDialog(null, "Cliente removido com sucesso!");
+                if (JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o ADM " + c.getNome() + "?", "Exclusão", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(c);
+                    s.getTransaction().commit();
+                    JOptionPane.showMessageDialog(null, "ADM " + c.getNome() + " removido com sucesso!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "ADM " + c.getNome() + " não removido!");
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Cliente não encontrado!");
             }
@@ -306,7 +311,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
         } catch (Exception prod) {
             JOptionPane.showMessageDialog(null, "Erro: " + prod);
         }
-        
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
@@ -322,8 +327,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
         dispose();
         Int_Adm_Opcoes.Main_2nd(clt);
     }//GEN-LAST:event_jMenu5MouseClicked
-    
-    
+
     public static void Main_2nd(final Cliente Logado) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -355,7 +359,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
             }
         });
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -386,7 +390,7 @@ public class Int_Adm_Adm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Int_Adm_Adm(new Cliente ("test", "test", "test", "test", "test", "test", 0, true, true)).setVisible(true);
+                new Int_Adm_Adm(new Cliente("test", "test", "test", "test", "test", "test", 0, true, true)).setVisible(true);
             }
         });
     }

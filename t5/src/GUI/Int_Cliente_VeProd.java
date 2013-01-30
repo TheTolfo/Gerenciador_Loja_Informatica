@@ -66,7 +66,7 @@ public class Int_Cliente_VeProd extends javax.swing.JFrame {
 
     private boolean Verifica_Presenca(Produto test) {
         for (Carrinho_Compras cl : cc) {
-            if (test.getIdProduto() == cl.Get_Produto().getIdProduto()) {
+            if (test.getNome().equals(cl.Get_Produto().getNome())) {
                 return false;
             }
         }
@@ -274,6 +274,8 @@ public class Int_Cliente_VeProd extends javax.swing.JFrame {
                 Int_Cliente_CarrinhoCompras.Main_2nd(clt, cc);
             } else {
                 JOptionPane.showMessageDialog(null, "O produto já existe no carrinho de compras");
+                dispose();
+                Int_Cliente_CarrinhoCompras.Main_2nd(clt, cc);
             }
         } catch (NumberFormatException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro: " + e);

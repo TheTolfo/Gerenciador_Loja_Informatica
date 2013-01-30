@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import Util.HibernateUtil;
 import entidades.Cliente;
 import entidades.Produto;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
 import t5.Carrinho_Compras;
 
 /**
@@ -50,14 +52,19 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
         jLabel3.setText("Bem vindo " + str + "!");
     }
 
-    private void Preenche_valor() {
+    private double RetornvaValorTotal() {
         double soma = 0;
         double preco;
         for (Carrinho_Compras cl : cc) {
-            preco = cl.Get_Produto().getPreco() * ((100 - cl.Get_Produto().getDesconto())/100 );
+            preco = cl.Get_Produto().getPreco() * ((100 - cl.Get_Produto().getDesconto()) / 100);
             soma = soma + preco;
         }
-        jTextField1.setText("" + soma);
+        return soma;
+    }
+
+    private void Preenche_valor() {
+
+        jTextField1.setText("" + RetornvaValorTotal());
     }
 
     private void Preenche_Tabela() {
@@ -71,7 +78,7 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
         try {
             double preco;
             for (Carrinho_Compras cl : cc) {
-                preco = cl.Get_Produto().getPreco() * ((100 - cl.Get_Produto().getDesconto())/100 );
+                preco = cl.Get_Produto().getPreco() * (double)((100 - cl.Get_Produto().getDesconto()) / 100);
                 modelo.addRow(new Object[]{cl.Get_Produto().getNome(), cl.Get_Quantia(), preco, cl.Get_ValorTotal()});
             }
             Preenche_valor();
@@ -84,6 +91,24 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
     private Produto RetornaProd_Selecionado() {
         int linha = jTable1.getSelectedRow();
         return t5.Verificações.Retorna_Produto(jTable1.getValueAt(linha, 0).toString());
+    }
+
+    private void Altera_Produtos() {
+        int q;
+        for (Carrinho_Compras cl : cc) {
+            q = cl.Get_Produto().getQuantia() - cl.Get_Quantia();
+            cl.Get_Produto().setQuantia(q);
+        }
+        Atualiza_Banco();
+    }
+
+    private void Atualiza_Banco() {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        for (Carrinho_Compras cl : cc) {
+            s.update(cl.Get_Produto());
+        }
+        s.getTransaction().commit();
     }
 
     /**
@@ -286,10 +311,14 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu4MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        cc.removeAll(cc);
-        JOptionPane.showMessageDialog(null, "Todos items do carrinho foram removidos!");
-        Preenche_Tabela();
-        repaint();
+        if (JOptionPane.showConfirmDialog(null, "Deseja realmente excluir todos os itens do carrinho de compras?", "Exclusão", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            cc.removeAll(cc);
+            JOptionPane.showMessageDialog(null, "Todos items do carrinho foram removidos!");
+            Preenche_Tabela();
+            repaint();
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum item removido do carrinho de compras!");
+        }
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
@@ -298,10 +327,14 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
             if (remov == null) {
                 JOptionPane.showMessageDialog(null, "Produto a ser removido não encontrado!");
             } else {
-                cc.remove(remov);
-                JOptionPane.showMessageDialog(null, "Produto removido com sucesso do carrinho!");
-                Preenche_Tabela();
-                repaint();
+                if (JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o item do carrinho de compras?", "Exclusão", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    cc.remove(remov);
+                    JOptionPane.showMessageDialog(null, "Produto removido com sucesso do carrinho!");
+                    Preenche_Tabela();
+                    repaint();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nenhum item removido do carrinho de compras!");
+                }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro: " + e);
@@ -310,14 +343,17 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         if (cc.size() > 0) {
-            JOptionPane.showMessageDialog(null, "Compra no valor de " + jTextField1.getText() + " efetuada com sucesso!");
-            //Remove_Banco();
-            cc.removeAll(cc);
-            dispose();
-            Int_Cliente_ListaProdutos.Main_2nd(clt, cc);
-        }
-        else{
-        JOptionPane.showMessageDialog(null, "É impossivel efetuar uma compra nula!");
+            if (JOptionPane.showConfirmDialog(null, "Deseja realmente conpletar a compra no valor de " + RetornvaValorTotal() + "?", "Exclusão", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, "Compra no valor de " + jTextField1.getText() + " efetuada com sucesso!");
+                Altera_Produtos();
+                cc.removeAll(cc);
+                dispose();
+                Int_Cliente_ListaProdutos.Main_2nd(clt, cc);
+            } else {
+                JOptionPane.showMessageDialog(null, "Compra não realizada!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "É impossivel efetuar uma compra nula!");
         }
     }//GEN-LAST:event_jButton1MouseClicked
 
@@ -326,6 +362,7 @@ public class Int_Cliente_CarrinhoCompras extends javax.swing.JFrame {
         int index = jTable1.getSelectedRow();
         Carrinho_Compras obj = cc.get(index);
         cc.remove(index);
+        dispose();
         Int_Cliente_AlteraQuant.Main_2nd(clt, cc, obj);
     }//GEN-LAST:event_jButton4MouseClicked
 

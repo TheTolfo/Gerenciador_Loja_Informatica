@@ -287,11 +287,16 @@ public class Int_Adm_Prod extends javax.swing.JFrame {
         try {
             Produto prod = RetornaProd_Selecionado();
             if (prod != null) {
+                if(JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o produto " + prod.getNome() + "?", "Exclusão", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
                 Session s = HibernateUtil.getSessionFactory().getCurrentSession();
                 s.beginTransaction();
                 s.delete(prod);
                 s.getTransaction().commit();
-                JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto " + prod.getNome() +" removido com sucesso!");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Produto " + prod.getNome() +" não removido!");
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Produto não encontrado!");
             }
